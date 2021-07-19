@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag User</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.0.2/zephyr/bootstrap.min.css"
+        integrity="sha512-8AsrxJHNcfBjevT8jxlnbIcZKffcLoLyOymcu4F2ClBWIxgRJ3dNdRolabqSuAa6x4a2ujzzHkjFpmJBQP/74g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/892/892353.png" type="image/x-icon">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">Tag User</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="">Home
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        
+        <div class="alert alert-primary">
+            <h4 class="alert-heading">Accepted Usernames</h4>
+            <p class="text-danger mb-0"><strong>jack jill joe jackob</strong></p>
+          </div>
+
+        <div class="drop" style="display: none;">
+            <label for="users" class="form-label mt-4">Select User</label>
+            <select class="form-select" id="users" onchange="user()">
+                <option value="0"></option>
+                <option value="jack">jack</option>
+                <option value="jill">jill</option>
+                <option value="joe">joe</option>
+                <option value="jackob">jackob</option>
+            </select>
+        </div>
+
+        <form>
+            <fieldset>
+                <div class="form-group">
+                    <label for="text" class="form-label mt-4">Example textarea</label>
+                    <textarea class="form-control" id="text" rows="3" onkeyup="check()"
+                        onkeydown="keydown()"></textarea>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary" id="btn">Submit</button>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="container mt-3" id="cont"></div>
+
+</body>
+
+<script>
+    var backspace = false;
+    const check = () => {
+        if (backspace) {
+            backspace = false;
+        }
+        else {
+            const textbox = document.getElementById('text');
+            const len = textbox.value.length;
+            if (textbox.value[len - 1] == '@') {
+                const drop = document.querySelector('.drop');
+                drop.style.display = "block";
+                const users = document.getElementById('users');
+                users.selectedIndex = "-1";
+                const btn = document.getElementById('btn');
+                btn.disabled = true;
+                textbox.disabled = true;
+            }
+        }
+    }
+    const user = () => {
+        const users = document.getElementById('users');
+        const myUser = users.value;
+        const textbox = document.getElementById('text');
+        const len = textbox.value.length;
+        if (myUser != '0') {
+            textbox.value = textbox.value + myUser + ' ';
+        }
+        else {
+            textbox.value = textbox.value.slice(0, len - 1);
+        }
+        const btn = document.getElementById('btn');
+        btn.disabled = false;
+        textbox.disabled = false;
+        const drop = document.querySelector('.drop');
+        drop.style.display = "none";
+    }
+    const keydown = () => {
+        var key = event.keyCode || event.charCode;
+        if (key == 8 || key == 46)
+            backspace = true;
+    }
+    const btn = document.getElementById('btn');
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const textbox = document.getElementById('text');
+        const container = document.getElementById('cont');
+        const para = document.createElement("p");
+        var words = textbox.value.split(" ");
+        var node;
+        words.forEach(element => {
+            if (element[0] == '@') {
+                const name = element.substring(1);
+                const names = ["jack", "jill", "joe", "jackob"];
+                if(names.includes(name)) {
+                    var a = document.createElement('a');
+                    var linkText = document.createTextNode(element);
+                    a.append(linkText);
+                    a.href = "#" + name;
+                    node = a;
+                    para.append(node);
+                    para.append( document.createTextNode( '\u00A0' ) );
+                }
+            }
+            else {
+                node = document.createTextNode(element);
+                para.append(node);
+                para.append( document.createTextNode( '\u00A0' ) );
+            }
+            
+        });
+        container.appendChild(para);
+    })
+</script>
+
+</html>
